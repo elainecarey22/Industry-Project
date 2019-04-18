@@ -1,0 +1,70 @@
+var beaches = {
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "stationID": "IESWBWC230_0000_0300_MODELLED",
+        "coordinates": [
+          -9.08103515624996,
+          53.25048537234853
+        ]
+      },
+      "properties": {
+        "city": "Salthill",
+        "country": "Ireland",
+        "county": "Galway"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "stationID" : "IEWEBWC160_0000_0100_MODELLED",
+        "coordinates": [
+          -8.988761718749961,
+          53.170712647327925
+        ]
+      },
+      "properties": {
+        "city": "Kinvara",
+        "country": "Ireland",
+        "county": "Galway"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "stationID" : "IEWEBWC010_0000_0200_MODELLED",
+        "coordinates": [
+        -9.75076171874996,
+        53.131712648428966
+        ]
+      },
+      "properties": {
+        "city": "Inis Mór",
+        "country": "Ireland",
+        "county": "Galway"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "stationID" : "IEWEBWT170_0700_0200_MODELLED",
+        "coordinates": [
+          -9.01852734374996,
+          53.26821264457533
+        ]
+      },
+      "properties": {
+        "city": "Ballyloughane",
+        "country": "Ireland",
+        "county": "Galway"
+      }
+    }
+
+  ]
+};

@@ -1,0 +1,374 @@
+// Wait until the DOM content has loaded before
+// initializing the map
+document.addEventListener('DOMContentLoaded', function() {
+  // create MAP using access token and variable 'map'
+  mapboxgl.accessToken = 'pk.eyJ1IjoiZWNhcmV5MjIiLCJhIjoiY2pzM2E3OG5qMjVrazN5bjF4M28xOWZzMiJ9.aDn2wTTUA-BvzMKGmAAcZg';
+  // This adds the map to your page
+  var map = new mapboxgl.Map({
+    // container id specified in the HTML
+    container: 'map',
+    // style URL
+    style: 'mapbox://styles/mapbox/outdoors-v11',
+    // initial position in [lon, lat] format
+    center: [-8, 53.7],
+    // initial zoom
+    zoom: 5.7
+  });
+  map.on('load', function(e) {
+    buildLocationList(beaches);
+    // Add the data to map as a layer
+    map.addSource('places', {
+      type: 'geojson',
+      data: beaches
+    });
+    //set the perimeter of the map to be searched
+    var geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      bbox: [-10.832520, 51.289406, -5.317383, 55.429013]
+    });
+
+    map.addControl(geocoder);
+    map.addSource('single-point', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: [] //initially there are no features
+      }
+    });
+
+    map.addLayer({
+      id: 'point',
+      source: 'single-point',
+      type: 'circle',
+      paint: {
+        'circle-radius': 10,
+        'circle-color': '#007cbf',
+        'circle-stroke-width': 3,
+        'circle-stroke-color': '#fff'
+      }
+    });
+  });
+  function buildLocationList(data) {
+    // Iterate through the list of beaches
+    for (i = 0; i < data.features.length; i++) {
+      var currentFeature = data.features[i];
+      // Shorten data.feature.properties to just `prop` so we're not
+      // writing this long form over and over again.
+      var prop = currentFeature.properties;
+      // Select the listing container in the HTML and append a div
+      // with the class 'item' for each store
+      var listings = document.getElementById('listings');
+      var listing = listings.appendChild(document.createElement('div'));
+      listing.className = 'item';
+      listing.id = 'listing-' + i;
+
+      // Create a new link with the class 'title' for each store
+      // and fill it with the store address
+      var link = listing.appendChild(document.createElement('a'));
+      link.href = '#';
+      link.className = 'title';
+      link.dataPosition = i;
+      link.innerHTML = prop.city;
+
+      // Create a new div with the class 'details' for each location
+      // and fill it with the county name
+      var details = listing.appendChild(document.createElement('div'));
+      details.innerHTML = prop.county;
+
+      beaches.features.forEach(function(marker) {
+        // Create a div element for the marker
+        var el = document.createElement('div');
+        // Add a class called 'marker' to each div
+        el.className = 'marker';
+        // By default the image for your custom marker will be anchored
+        // by its center. Adjust the position accordingly
+        // Create the custom markers, set their position, and add to map
+        new mapboxgl.Marker(el, {
+            offset: [0, -23]
+          })
+          .setLngLat(marker.geometry.coordinates)
+          .addTo(map);
+
+        // add event listener for clicking markers on the map
+        el.addEventListener('click', function(e) {
+          var activeItem = document.getElementsByClassName('active');
+          // 1. Fly to the point
+          flyToStore(marker);
+          // 2. Close all other popups and display popup for clicked location
+          createPopUp(marker);
+          // 3. Highlight location in sidebar (and remove highlight for all other locations)
+          e.stopPropagation();
+          if (activeItem[0]) {
+            activeItem[0].classList.remove('active');
+          }
+          refreshGraphs(marker);
+        });
+      });
+
+      function refreshGraphs(currentFeature) {
+        long = currentFeature.geometry.coordinates[0]
+        lat = currentFeature.geometry.coordinates[1]
+        stationID = currentFeature.geometry.stationID
+        console.log(long, lat);
+        refreshSalinity(long, lat);
+        refreshTemp(long, lat);
+        refreshHeight(stationID);
+      }
+
+      function flyToStore(currentFeature) {
+        map.flyTo({
+          center: currentFeature.geometry.coordinates,
+          zoom: 12.5
+        });
+      }
+
+      function createPopUp(currentFeature) {
+        var popUps = document.getElementsByClassName('mapboxgl-popup');
+        // Check if there is already a popup on the map and if so, remove it
+        if (popUps[0]) popUps[0].remove();
+
+        var popup = new mapboxgl.Popup({
+            closeOnClick: false
+          })
+          .setLngLat(currentFeature.geometry.coordinates)
+          .setHTML('<h4>' + currentFeature.properties.city + ', ' + currentFeature.properties.county +
+            '</h4>' + '<h5><a href="#forecast">' + 'Get Forecast' + '</a></h5>')
+          .addTo(map);
+
+        document.getElementById("currentLocation").innerHTML = currentFeature.properties.city + ', ' + currentFeature.properties.county
+      }
+
+      if (prop.distance) {
+        var roundedDistance = Math.round(prop.distance * 100) / 100;
+        details.innerHTML += '<p><strong>' + roundedDistance + ' miles away</strong></p>';
+      }
+      // Add an event listener for the links in the sidebar listing
+      link.addEventListener('click', function(e) {
+        // Update the currentFeature to the store associated with the clicked link
+        var clickedListing = data.features[this.dataPosition];
+        //Fly to the point associated with the clicked link
+        flyToStore(clickedListing);
+        //Close all other popups and display popup for clicked store
+        createPopUp(clickedListing);
+        // get graph data for clicked location
+        refreshGraphs(clickedListing);
+
+        //Highlight listing in sidebar (and remove highlight for all other listings)
+        var activeItem = document.getElementsByClassName('active');
+        if (activeItem[0]) {
+          activeItem[0].classList.remove('active');
+        }
+        this.parentNode.classList.add('active');
+
+        document.getElementById("currentLocation").innerHTML = clickedListing.properties.city + ', ' + clickedListing.properties.county
+      });
+
+      // Add an event listener for when a user clicks on the map
+      map.on('click', function(e) {
+        // Query all the rendered points in the view
+        var features = map.queryRenderedFeatures(e.point, {
+          layers: ['locations']
+        });
+
+        if (features.length) {
+          var clickedPoint = features[0];
+          // 1. Fly to the point
+          flyToStore(clickedPoint);
+          // 2. Close all other popups and display popup for clicked store
+          createPopUp(clickedPoint);
+          // 3. Highlight listing in sidebar (and remove highlight for all other listings)
+          var activeItem = document.getElementsByClassName('active');
+          if (activeItem[0]) {
+            activeItem[0].classList.remove('active');
+          }
+          // Find the index of the store.features that corresponds to the clickedPoint that fired the event listener
+          var selectedFeature = clickedPoint.properties.address;
+
+          for (var i = 0; i < beaches.features.length; i++) {
+            if (beaches.features[i].properties.address === selectedFeature) {
+              selectedFeatureIndex = i;
+            }
+          }
+          // Select the correct list item using the found index and add the active class
+          var listing = document.getElementById('listing-' + selectedFeatureIndex);
+          listing.classList.add('active');
+        }
+      });
+    }
+  }
+});
+/*
+** event handler for collpasing sidebar
+*/
+  $('#sidebarCollapse').on('click', function() {
+    $('#sidebar').toggleClass('active');
+  });
+  /*
+  ** function to return a 0 before month number
+  ** needed for requesting months Jan - Sep
+  */
+  Date.prototype.getFullMonth = function () {
+     if (this.getMonth() < 10) {
+         return '0' + (this.getMonth() + 1) ;
+     }
+     return this.getMonth();
+  };
+  /*
+  ** function to return a 0 before date number
+  ** needed for requesting dates 1-9
+  */
+  Date.prototype.getFullDate = function () {
+     if (this.getDate() < 10) {
+         return '0' + (this.getDate()) ;
+     }
+     return this.getDate();
+  };
+  Date.prototype.getFullHour = function () {
+     if (this.getHours() < 10) {
+         return '0' + (this.getHours()) ;
+     }
+     return this.getHours();
+  };
+  Date.prototype.getFullMinute = function () {
+     if (this.getMinutes() < 10) {
+         return '0' + (this.getMinutes()) ;
+     }
+     return this.getMinutes();
+  };
+  Date.prototype.getFullSecond = function () {
+     if (this.getSeconds() < 10) {
+         return '0' + (this.getSeconds()) ;
+     }
+     return this.getSeconds();
+  };
+/*
+** create current datetime object in format needed for AJAX call
+*/
+var today = new Date();
+var current_month = today.getFullMonth();
+var current_date = today.getFullDate();
+var current_hour = today.getFullHour();
+var current_minute = today.getFullMinute();
+var current_second = today.getFullSecond();
+var current_date = today.getFullYear()+'-'+ current_month +'-'+current_date;
+var current_time = current_hour + ":" + current_minute + ":" + current_second + 'Z';
+var dateTime = current_date+'T'+current_time;
+console.log(dateTime);
+/*
+** create datetime object in format needed for AJAX call
+** today plus two days
+*/
+var todaysDate = new Date();
+todaysDate.setDate(todaysDate.getDate() + 1);
+var this_month = todaysDate.getFullMonth();
+var this_date = todaysDate.getFullDate();
+var this_day = todaysDate.getFullYear()+'-'+ this_month +'-'+ this_date;
+var dateTimePlusOne = this_day+'T'+current_time;
+
+function refreshSalinity(long, lat) {
+  if (long == undefined) {
+    long = '-9.08103515624996'
+  }
+  if (lat == undefined) {
+    lat = '53.25048537234853'
+  }
+
+  $.ajax({
+      type: 'GET',
+      url: 'https://erddap.marine.ie/erddap/griddap/IMI_CONN_3D.json?Sea_water_salinity[(' + dateTime + '):1:(' + dateTimePlusOne + ')][(20.0):1:(20.0)][(' + lat + '):1:(' + lat + ')][(' + long + '):1:(' + long + ')]',
+      success: (data) => {
+        var response = data.table
+        var salinity = [];
+        console.log(response)
+        $.each(response.rows, function(index, row) {
+            var isoDate = new Date(row[0]);
+            var jsdate = isoDate.getTime();
+            rowForChart = [jsdate, row[4]];
+            salinity.push(rowForChart);
+        })
+        salinityGraph(salinity);
+      },
+      // make AJAX call again after 1 hour
+      complete: function() {
+        setTimeout(refreshSalinity, 3600000);
+      }
+    });
+  };
+  function refreshTemp(long, lat) {
+    if (long == undefined) {
+      long = '-9.08103515624996'
+    }
+    if (lat == undefined) {
+      lat = '53.25048537234853'
+    }
+      $.ajax({
+          type: 'GET',
+          url: 'https://erddap.marine.ie/erddap/griddap/IMI_CONN_3D.json?Sea_water_temperature[(' + dateTime + '):1:(' + dateTimePlusOne + ')][(20.0):1:(20.0)][(' + lat + '):1:(' + lat + ')][(' + long + '):1:(' + long + ')]',
+          success: function(data) {
+            var currentTemp = data.table.rows[0]
+            var curTemp = currentTemp[4]
+            console.log(curTemp);
+            var round = Math.round(curTemp * 100) / 100;
+            document.getElementById("watertemp").innerHTML = round;
+              var response = data.table
+              var seaTemp = [];
+              console.log(response)
+              $.each(response.rows, function(index, row) {
+                  var isoDate = new Date(row[0]);
+                  var jsdate = isoDate.getTime();
+                  rowForChart = [jsdate, row[4]];
+                  seaTemp.push(rowForChart);
+              })
+              tempGraph(seaTemp);
+          },
+          // make AJAX call again after 1 hour
+          complete: function() {
+            setTimeout(refreshTemp, 3600000);
+          }
+        });
+      };
+      function refreshHeight(stationID) {
+        if (stationID == undefined) {
+          stationID = 'IESWBWC230_0000_0300_MODELLED'
+        }
+        $.ajax({
+            type: 'GET',
+            url: 'https://erddap.marine.ie/erddap/tabledap/IMI-TidePrediction_epa.json?time%2Csea_surface_height&time%3E=now&time%3C=now%2B2days&stationID=%22'+ stationID + '%22&distinct()',
+            success: function(data) {
+                var currentTide = data.table.rows[0]
+                var curT = currentTide[1]
+                console.log(curT);
+                document.getElementById("currentT").innerHTML = curT;
+                var response = data.table
+                var tideHeight = [];
+                var a = [];
+                var t = [];
+                console.log(response)
+
+                $.each(response.rows, function(index, row) {
+                    //for chart
+                    var isoDate = new Date(row[0]);
+                    var jsdate = isoDate.getTime();
+                    rowForChart = [jsdate, row[1]];
+                    tideHeight.push(rowForChart);
+                })
+                // pass data to drawTable function
+                drawTable(tideHeight);
+            },
+            // make AJAX call again after 10 minutes
+            complete: function() {
+              setTimeout(refreshHeight, 600000);
+            }
+          });
+      };
+      $.ajax({
+          type: 'GET',
+          url: 'https://api.weatherunlocked.com/api/forecast/ie.H91?app_id=90b7901d&app_key=0c4da4ca6ded3f9ea285705055d53dc8',
+          success: function(data) {
+              var sunrise = data.Days[0].sunrise_time
+              var sunset = data.Days[0].sunset_time;
+              console.log(sunrise, sunset);
+              document.getElementById("sunrise").innerHTML = sunrise;
+              document.getElementById("sunset").innerHTML = sunset;
+          },
+        });
