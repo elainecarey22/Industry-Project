@@ -22,9 +22,56 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add the data to map as a layer
     map.addSource('places', {
       type: 'geojson',
-      data: beaches
+      data: beaches,
+      // new code added 27th May      
+      cluster: true,
+      clusterRadius: 30,
+      clusterMaxZoom: 12
+    }); // end addSource
+
+    // new code added 27th May
+
+    map.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'places',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': [
+          'step',
+            ['get', 'point_count'],
+              "#51bbd6",
+              100,
+              "#f1f075",
+              750,
+              "#f28cb1"
+        ],
+        "circle-radius": [
+          "step",
+          ["get", "point_count"],
+          20,
+          100,
+          30,
+          750,
+          40
+        ]
+      }
+    }); // end addLayer
+
+    map.addLayer({
+      id: "cluster-count",
+      type: "symbol",
+      source: "places",
+      filter: ["has", "point_count"],
+      layout: {
+        "text-field": "{point_count_abbreviated}",
+        "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+        "text-size": 12
+      }
     });
-  });
+    
+    //end new code
+  }); // end map on load function
 
   function buildLocationList(data) {
     // Iterate through the list of beaches
