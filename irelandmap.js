@@ -2,7 +2,7 @@
  ** A Mapbox tutorial provided the basis for the following map code
  */
 // Wait until DOM content has loaded before initialising map
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   // create MAP using access token and variable 'map'
   mapboxgl.accessToken = 'pk.eyJ1IjoiZWNhcmV5MjIiLCJhIjoiY2pzM2E3OG5qMjVrazN5bjF4M28xOWZzMiJ9.aDn2wTTUA-BvzMKGmAAcZg';
   // This adds the map to your page
@@ -16,9 +16,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // initial zoom
     zoom: 5.7
   });
+
+  // Add zoom and rotation controls to the bottom right of the map
+  map.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+
   // populate map with beaches from geojson file
-  map.on('load', function(e) {
-    buildLocationList(beaches);
+  map.on('load', function (e) {
+    //buildLocationList(beaches);
+    buildSidebar(beaches);
     // Add the data to map as a layer
     map.addSource('places', {
       type: 'geojson',
@@ -29,8 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
       clusterMaxZoom: 12
     }); // end addSource
 
-    // new code added 27th May
-
     map.addLayer({
       id: 'clusters',
       type: 'circle',
@@ -39,12 +42,12 @@ document.addEventListener('DOMContentLoaded', function() {
       paint: {
         'circle-color': [
           'step',
-            ['get', 'point_count'],
-              "#51bbd6",
-              100,
-              "#f1f075",
-              750,
-              "#f28cb1"
+          ['get', 'point_count'],
+          "#51bbd6",
+          100,
+          "#f1f075",
+          750,
+          "#f28cb1"
         ],
         "circle-radius": [
           "step",
@@ -68,12 +71,95 @@ document.addEventListener('DOMContentLoaded', function() {
         "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
         "text-size": 12
       }
+    }); // end addLayer
+
+    map.addLayer({
+      id: "unclustered-point",
+      type: "circle",
+      source: "places",
+      filter: ["!", ["has", "point_count"]],
+      paint: {
+        "circle-color": "#11b4da",
+        "circle-radius": 4,
+        "circle-stroke-width": 1,
+        "circle-stroke-color": "#fff"
+      }
+    }); // end addLayer
+
+    // inspect a cluster on click
+    map.on('click', 'clusters', function (e) {
+      var features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+      var clusterId = features[0].properties.cluster_id;
+      console.log(clusterId);
+      map.getSource('places').getClusterExpansionZoom(clusterId, function (err, zoom) {
+        if (err)
+          return;
+
+        map.easeTo({
+          center: features[0].geometry.coordinates,
+          zoom: zoom
+        });
+      });
+    }); // end clusters onclick event
+
+    map.on('click', 'unclustered-point', function (data) {
+      // Iterate through the list of beaches
+      for (i = 0; i < data.features.length; i++) {
+        var currentFeature = data.features[i];
+        // Update the currentFeature to the beach associated with the clicked link
+        console.log(currentFeature);
+        //Fly to the point associated with the clicked link
+        flyToStore(currentFeature);
+        //Close all other popups and display popup for clicked store
+        createPopUp(currentFeature);
+        // get graph data for clicked location
+        refreshGraphs(currentFeature);
+        // variables to define the current markers long, lat and stationID
+        // passed into functions which make the ajax requests
+        function refreshGraphs(currentFeature) {
+          long = currentFeature.geometry.coordinates[0]
+          lat = currentFeature.geometry.coordinates[1]
+          stationID = currentFeature.geometry.stationID
+          refreshSalinity(long, lat);
+          refreshTemp(long, lat);
+          refreshHeight(stationID);
+        }
+        // zooms in on clicked marker
+        function flyToStore(currentFeature) {
+          map.flyTo({
+            center: currentFeature.geometry.coordinates,
+            zoom: 12.5
+          });
+        }
+        // creates popup with whichever location is clicked
+        function createPopUp(currentFeature) {
+          var popUps = document.getElementsByClassName('mapboxgl-popup');
+          // Check if there is already a popup on the map and if so, remove it
+          if (popUps[0]) popUps[0].remove();
+          var popup = new mapboxgl.Popup({
+            closeOnClick: true
+          })
+            .setLngLat(currentFeature.geometry.coordinates)
+            // add info from geojson file to the popup and add link to scroll down the page
+            .setHTML('<h4>' + currentFeature.properties.city + ', ' + currentFeature.properties.county +
+              '</h4>' + '<h5><a href="#forecast">' + 'Get Forecast' + '</a></h5>')
+            .addTo(map);
+          // add info from geojson file to the popup
+          document.getElementById("currentLocation").innerHTML = currentFeature.properties.city + ', ' + currentFeature.properties.county
+        }
+      }
+    }); // end unclustered-point onclick event
+
+    // change format of mouse when hovering over cluster
+    map.on('mouseenter', 'clusters', function () {
+      map.getCanvas().style.cursor = 'pointer';
     });
-    
-    //end new code
+    map.on('mouseleave', 'clusters', function () {
+      map.getCanvas().style.cursor = '';
+    });
   }); // end map on load function
 
-  function buildLocationList(data) {
+  function buildSidebar(data) {
     // Iterate through the list of beaches
     for (i = 0; i < data.features.length; i++) {
       var currentFeature = data.features[i];
@@ -95,34 +181,23 @@ document.addEventListener('DOMContentLoaded', function() {
       // add the name of the county that the beach is in
       var details = listing.appendChild(document.createElement('div'));
       details.innerHTML = info.county;
-      // add a marker for each location in the geojson file
-      beaches.features.forEach(function(marker) {
-        // Create a div element for the marker
-        var el = document.createElement('div');
-        // Add a class called 'marker' to each div
-        el.className = 'marker';
-        // Create the custom markers and add to map
-        new mapboxgl.Marker(el, {
-            offset: [0, -23]
-          })
-          // add the marker to the coordinates defined in the geojson file
-          .setLngLat(marker.geometry.coordinates)
-          .addTo(map);
-        // add event listener for clicking markers on the map
-        el.addEventListener('click', function(e) {
-          var activeItem = document.getElementsByClassName('active');
-          // Zoom in on marker
-          flyToStore(marker);
-          // Close all other popups and display popup for clicked location
-          createPopUp(marker);
-          // Highlight location in sidebar (and remove highlight for all other locations)
-          e.stopPropagation();
-          if (activeItem[0]) {
-            activeItem[0].classList.remove('active');
-          }
-          // pass marker variable to refreshGraphs function
-          refreshGraphs(marker);
-        });
+      link.addEventListener('click', function (e) {
+        // Update the currentFeature to the beach associated with the clicked link
+        var clickedListing = data.features[this.dataPosition];
+        console.log(clickedListing);
+        //Fly to the point associated with the clicked link
+        flyToStore(clickedListing);
+        //Close all other popups and display popup for clicked store
+        createPopUp(clickedListing);
+        // get graph data for clicked location
+        refreshGraphs(clickedListing);
+        //Highlight listing in sidebar (and remove highlight for all other listings)
+        var activeItem = document.getElementsByClassName('active');
+        if (activeItem[0]) {
+          activeItem[0].classList.remove('active');
+        }
+        this.parentNode.classList.add('active');
+        document.getElementById("currentLocation").innerHTML = clickedListing.properties.city + ', ' + clickedListing.properties.county
       });
       // variables to define the current markers long, lat and stationID
       // passed into functions which make the ajax requests
@@ -147,8 +222,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check if there is already a popup on the map and if so, remove it
         if (popUps[0]) popUps[0].remove();
         var popup = new mapboxgl.Popup({
-            closeOnClick: false
-          })
+          closeOnClick: true
+        })
           .setLngLat(currentFeature.geometry.coordinates)
           // add info from geojson file to the popup and add link to scroll down the page
           .setHTML('<h4>' + currentFeature.properties.city + ', ' + currentFeature.properties.county +
@@ -157,70 +232,21 @@ document.addEventListener('DOMContentLoaded', function() {
         // add info from geojson file to the popup
         document.getElementById("currentLocation").innerHTML = currentFeature.properties.city + ', ' + currentFeature.properties.county
       }
-      // Add an event listener for the links in the sidebar listing
-      link.addEventListener('click', function(e) {
-        // Update the currentFeature to the beach associated with the clicked link
-        var clickedListing = data.features[this.dataPosition];
-        //Fly to the point associated with the clicked link
-        flyToStore(clickedListing);
-        //Close all other popups and display popup for clicked store
-        createPopUp(clickedListing);
-        // get graph data for clicked location
-        refreshGraphs(clickedListing);
-        //Highlight listing in sidebar (and remove highlight for all other listings)
-        var activeItem = document.getElementsByClassName('active');
-        if (activeItem[0]) {
-          activeItem[0].classList.remove('active');
-        }
-        this.parentNode.classList.add('active');
-        document.getElementById("currentLocation").innerHTML = clickedListing.properties.city + ', ' + clickedListing.properties.county
-      });
-      // Add an event listener for when a user clicks on the map
-      map.on('click', function(e) {
-        // Query all the rendered points in the view
-        var features = map.queryRenderedFeatures(e.point, {
-          layers: ['locations']
-        });
-
-        if (features.length) {
-          var clickedPoint = features[0];
-          // 1. Fly to the marker
-          flyToStore(clickedPoint);
-          // 2. Close all other popups and display popup for clicked beach
-          createPopUp(clickedPoint);
-          // 3. Highlight beach in sidebar (and remove highlight for all other beach)
-          var activeItem = document.getElementsByClassName('active');
-          if (activeItem[0]) {
-            activeItem[0].classList.remove('active');
-          }
-          // Find the index that corresponds to the clickedPoint that fired the event listener
-          var selectedFeature = clickedPoint.properties.address;
-
-          for (var i = 0; i < beaches.features.length; i++) {
-            if (beaches.features[i].properties.address === selectedFeature) {
-              selectedFeatureIndex = i;
-            }
-          }
-          // Select the correct list item using the found index and add the active class
-          var listing = document.getElementById('listing-' + selectedFeatureIndex);
-          listing.classList.add('active');
-        }
-      }); //end event listener
-    } // end iteration through list of beaches
-  } // end buildLocationList()
+    }
+  } // end buildSidebar() 
 }); // end document.addEventListener at beginning of page
 /*
  ** End Mapbox tutorial code **
  ** event handler for collpasing sidebar
  */
-$('#sidebarCollapse').on('click', function() {
+$('#sidebarCollapse').on('click', function () {
   $('#sidebar').toggleClass('active');
 });
 /*
  ** function to return a 0 before month number
  ** needed for requesting months Jan - Sep
  */
-Date.prototype.getFullMonth = function() {
+Date.prototype.getFullMonth = function () {
   if (this.getMonth() < 10) {
     return '0' + (this.getMonth() + 1);
   }
@@ -230,28 +256,28 @@ Date.prototype.getFullMonth = function() {
  ** function to return a 0 before date number
  ** needed for requesting dates 1-9
  */
-Date.prototype.getFullDate = function() {
+Date.prototype.getFullDate = function () {
   if (this.getDate() < 10) {
     return '0' + (this.getDate());
   }
   return this.getDate();
 };
 // same function for hours 1-9
-Date.prototype.getFullHour = function() {
+Date.prototype.getFullHour = function () {
   if (this.getHours() < 10) {
     return '0' + (this.getHours());
   }
   return this.getHours();
 };
 // same function for minutes 1-9
-Date.prototype.getFullMinute = function() {
+Date.prototype.getFullMinute = function () {
   if (this.getMinutes() < 10) {
     return '0' + (this.getMinutes());
   }
   return this.getMinutes();
 };
 // same function for seconds 1-9
-Date.prototype.getFullSecond = function() {
+Date.prototype.getFullSecond = function () {
   if (this.getSeconds() < 10) {
     return '0' + (this.getSeconds());
   }
@@ -294,7 +320,7 @@ function refreshSalinity(long, lat) {
       var response = data.table
       var salinity = [];
       console.log(response)
-      $.each(response.rows, function(index, row) {
+      $.each(response.rows, function (index, row) {
         var isoDate = new Date(row[0]);
         var jsdate = isoDate.getTime();
         rowForChart = [jsdate, row[4]];
@@ -316,7 +342,7 @@ function refreshTemp(long, lat) {
   $.ajax({
     type: 'GET',
     url: 'https://erddap.marine.ie/erddap/griddap/IMI_CONN_3D.json?Sea_water_temperature[(' + dateTime + '):1:(' + dateTimePlusOne + ')][(20.0):1:(20.0)][(' + lat + '):1:(' + lat + ')][(' + long + '):1:(' + long + ')]',
-    success: function(data) {
+    success: function (data) {
       var currentTemp = data.table.rows[0]
       var curTemp = currentTemp[4]
       console.log(curTemp);
@@ -327,7 +353,7 @@ function refreshTemp(long, lat) {
       var response = data.table
       var seaTemp = [];
       console.log(response)
-      $.each(response.rows, function(index, row) {
+      $.each(response.rows, function (index, row) {
         var isoDate = new Date(row[0]);
         var jsdate = isoDate.getTime();
         rowForChart = [jsdate, row[4]];
@@ -346,7 +372,7 @@ function refreshHeight(stationID) {
   $.ajax({
     type: 'GET',
     url: 'https://erddap.marine.ie/erddap/tabledap/IMI-TidePrediction_epa.json?time%2Csea_surface_height&time%3E=now&time%3C=now%2B2days&stationID=%22' + stationID + '%22&distinct()',
-    success: function(data) {
+    success: function (data) {
       var currentTide = data.table.rows[0]
       var curT = currentTide[1]
       console.log(curT);
@@ -358,7 +384,7 @@ function refreshHeight(stationID) {
       var t = [];
       console.log(response)
 
-      $.each(response.rows, function(index, row) {
+      $.each(response.rows, function (index, row) {
         //for chart
         var isoDate = new Date(row[0]);
         var jsdate = isoDate.getTime();
@@ -374,7 +400,7 @@ function refreshHeight(stationID) {
 $.ajax({
   type: 'GET',
   url: 'https://api.weatherunlocked.com/api/forecast/ie.H91?app_id=90b7901d&app_key=0c4da4ca6ded3f9ea285705055d53dc8',
-  success: function(data) {
+  success: function (data) {
     var sunrise = data.Days[0].sunrise_time
     var sunset = data.Days[0].sunset_time;
     console.log(sunrise, sunset);
