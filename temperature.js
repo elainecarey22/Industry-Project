@@ -21,6 +21,9 @@ function tempGraph(seaTemp) {
                 data: seaTemp
             }
         },
+        tooltip: {
+            crosshairs: true
+        },
         scrollbar: {
             liveRedraw: false
         },
