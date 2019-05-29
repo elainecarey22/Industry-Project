@@ -1,0 +1,366 @@
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+body {
+    font: 'Offc Pro Medium', 'Arial Unicode MS Regular';
+    background: #fafafa;
+}
+p {
+    font: 'Offc Pro Medium, Arial Unicode MS Regular';
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+iframe {
+  width: 100%;
+  height: 100%;
+}
+a,
+a:hover,
+a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+.navbar {
+    position: relative;
+    padding: 5px 2.5px 5px 2.5px;
+    height: 10%;
+    background: #fff;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 40px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+.navbar-btn {
+    box-shadow: none;
+    outline: none !important;
+    border: none;
+}
+.line {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px dashed #ddd;
+    margin: 40px 0;
+}
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    background: #fff;
+    color: #818182;
+    transition: all 0.3s;
+    z-index: 1;
+    height: 100%;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+#sidebar.active {
+    margin-left: -250px;
+}
+#sidebar .sidebar-header {
+    padding: 14px;
+    font-size: 500px;
+    background: #2C69E5;
+    color: #fff;
+}
+#sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #47748b;
+}
+#sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+}
+#sidebar ul li a:hover {
+    color: #96B9FE;
+    background: #fff;
+}
+#sidebar ul li.active>a,
+a[aria-expanded="true"] {
+    color: #fff;
+    background: #96B9FE;
+}
+a[data-toggle="collapse"] {
+    position: relative;
+}
+.dropdown-toggle::after {
+    display: block;
+    position: relative;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #6d7fcc;
+}
+ul.CTAs {
+    padding: 20px;
+}
+ul.CTAs a {
+    text-align: center;
+    font-size: 0.9em !important;
+    display: block;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+a.download {
+    background: #fff;
+    color: #7386D5;
+}
+a.article,
+a.article:hover {
+    background: #6d7fcc !important;
+    color: #fff !important;
+}
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+}
+#content {
+    width: 100%;
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
+    #sidebarCollapse span {
+        display: none;
+    }
+}/* Style the navigation bar */
+.navbar {
+  background-color: #fff;
+  overflow: hidden;
+}
+/* Navbar links */
+.navbar a {
+  float: left;
+  text-align: center;
+  padding: 14px 16px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+}
+.navbar-brand {
+  align-items: center;
+  position: relative;
+}
+/* The dropdown container */
+.dropdown {
+  float: left;
+  overflow: hidden;
+}
+/* Dropdown button */
+.dropdown .dropbtn {
+  font-size: 16px;
+  border: none;
+  outline: none;
+  color: #fff;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit; /* Important for vertical align on mobile phones */
+  margin: 0; /* Important for vertical align on mobile phones */
+}
+/* Add a background color to navbar links on hover */
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: red;
+}
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: relative;
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+/* Links inside the dropdown */
+.dropdown-content a {
+  float: none;
+  color: blue;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+/* Add a grey background color to dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #fff;
+}
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+/* Navbar links on mouse-over */
+.navbar a:hover {
+  background-color: #fff;
+}
+.navbar-logo {
+  width: 20px;
+}
+/* Current/active navbar link */
+.active {
+  background-color: #fff;
+}
+/* Add responsiveness - will automatically display the navbar vertically instead of horizontally on screens less than 500 pixels */
+@media screen and (max-width: 500px) {
+  .navbar a {
+    float: none;
+    display: block;
+  }
+}
+body {
+  height: 1400px;
+}
+#heading0, #heading1, #heading2, #about, #subheading1, #subheading2, #subheading3 {
+  text-align: center;
+}
+#map {
+  position: absolute;
+  font: 'Offc Pro Medium', 'Arial Unicode MS Regular';
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+}
+.listings {
+  height: 100%;
+  overflow: auto;
+  padding-bottom: 60px;
+}
+.listings .item {
+  display: block;
+  border-bottom: 1px solid #eee;
+  padding: 10px;
+  text-decoration: none;
+}
+.listings .item:last-child {
+  border-bottom: none;
+}
+.listings .item .title {
+  display: block;
+  color: #2C69E5;
+  font-weight: 700;
+}
+.listings .item .title small {
+  font-weight: 400;
+}
+.listings .item.active .title,
+.listings .item .title:hover {
+  color: #96B9FE;
+}
+.listings .item.active {
+  background-color: #f8f8f8;
+}
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+  border-left: 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+::-webkit-scrollbar-track {
+  background: none;
+}
+::-webkit-scrollbar-thumb {
+  background: #2C69E5;
+  border-radius: 0;
+}
+.clearfix {
+  display: block;
+}
+.clearfix::after {
+  content: '.';
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+.mapboxgl-popup {
+  padding-bottom: 50px;
+}
+/* Markers */
+.mapboxgl-popup-close-button {
+  display: none;
+}
+.mapboxgl-popup-content {
+  font: 400 15px/22px 'Offc Pro Medium', 'Arial Unicode MS Regular';
+  padding: 0;
+  width: 180px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+.mapboxgl-popup-content-wrapper {
+  padding: 1%;
+}
+.mapboxgl-popup-content h4 {
+  background: #2C69E5;
+  color: #fff;
+  margin: 0;
+  display: block;
+  padding: 10px;
+  border-radius: 3px 3px 0 0;
+  font-weight: 700;
+  margin-top: -15px;
+}
+.mapboxgl-popup-content h5 {
+  margin: 0;
+  display: block;
+  padding: 10px;
+  font-weight: 400;
+}
+.mapboxgl-popup-content div {
+  padding: 10px;
+}
+.mapboxgl-container .leaflet-marker-icon {
+  cursor: pointer;
+}
+.mapboxgl-popup-anchor-top > .mapboxgl-popup-content {
+  margin-top: 15px;
+}
+.mapboxgl-popup-anchor-top > .mapboxgl-popup-tip {
+  border-bottom-color: #96B9FE;
+}
+.marker {
+  border: none;
+  cursor: pointer;
+  height: 40px;
+  width: 32px;
+  background-image: url(https://i.imgur.com/MK4NUzI.png);
+  background-color: rgba(0, 0, 0, 0);
+}
+.mapboxgl-ctrl-geocoder {
+  border: 0;
+  border-radius: 0;
+  position: absolute;
+  top: 15%;
+  left: 20.5%;
+  width: 800px;
+  margin-bottom: 10%;
+}
+.mapboxgl-ctrl-geocoder > div {
+  min-width: 100%;
+  margin-left: 20%;
+}
