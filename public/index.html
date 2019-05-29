@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Daily Swimmer</title>
+
+    <!-- Mapbox GL JS -->
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+    <!-- Geocoder plugin -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.0.1/mapbox-gl-geocoder.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.0.1/mapbox-gl-geocoder.css' type='text/css' />
+    <!-- Turf.js plugin -->
+    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+    <!-- Latest compiled and minified CSS for bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+    <!-- Latest compiled JavaScript for bootstrap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+    <!-- font API -->
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet'>
+    <!-- Highcharts CDNs -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <!-- local CSS file -->
+    <link rel="stylesheet" href="irelandmap.css">
+  </head>
+  <body>
+    <div class="wrapper">
+      <!--  Sidebar  -->
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <h3>Select a Location</h3>
+        </div>
+        <div id='listings' class='listings'></div>
+      </nav>
+      <!-- Navbar  -->
+      <div id="content">
+        <nav class="navbar navbar-expand-sm navbar-light bg-light">
+          <div class="container-fluid">
+
+            <button type="button" id="sidebarCollapse" class="btn btn-info">
+            <i class="fas fa-align-left"></i>
+            <span>Beach Locations</span>
+          </button>
+
+            <ul class="nav navbar-nav navbar-logo text-center">
+              <a class="navbar-brand" href="#">
+              <img src="Marine-Institute.jpg" alt="Logo" style="width: 220px; height: 60px;">
+            </a>
+            </ul>
+
+            <!-- black button on right of navbar -->
+            <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-align-justify"></i>
+          </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item active">
+                  <a class="nav-link js-scroll-trigger" href="#about">About</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div>
+      <div id='map' class='map'></div>
+      <script src="irelandmap.js"></script>
+      <script src="beaches.geojson"></script>
+    </div>
+    <!-- end map -->
+    <br>
+    <section id="forecast">
+      <div class="container">
+        <!-- Page Heading -->
+        <h3 class="h3 mb-2 text-gray-800" id="heading0">Select a location on the map above to get started</h3>
+          <br>
+          <h1 class="h3 mb-2 text-gray-800" id="heading1">Current Water Report</h1>
+          <p class="mb-4" id="subheading1">A summary of the current marine conditions for the selected area.</p>
+
+          <div class="row">
+            <!-- Card to display clicked location -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Current water conditions for</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="currentLocation"></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-water fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Card for sunrise and sunset times -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Sunrise</div>
+                      <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800" id="sunrise"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-sun fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Sunset</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="sunset"></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-moon fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Card for current tide height and water temp -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Tide height (m)</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="currentT"></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-swimmer fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Water Temp (°C)</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="watertemp"></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-temperature-low fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Met Eireann widget -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <iframe src="https://www.met.ie/widgets/county/galway" style="border:0px #ccc
+            solid;" name="MEWarning" scrolling="no" frameborder="0" marginheight="0px" marginwidth="0px" border="0" allowfullscreen></iframe>
+            </div>
+          </div>
+          <br>
+          <!-- Forecast Heading and Description -->
+          <div class="row">
+            <div class="col-xl-12 col-md-12 mb-8">
+              <h1 class="h3 mb-2 text-gray-800" id="heading2">Marine Forecast</h1>
+              <p class="mb-4" id="subheading2">This section provides a graphical representation of marine predictions for the next 24 - 48 hours. Information displayed here is specific to the location selected on the map. Click and drag the mouse between two points to zoom in on a more
+                specific time. </p>
+            </div>
+          </div>
+          <!-- Tide height graph -->
+          <div class="row">
+            <div class="col-xl-12 col-md-12 mb-8">
+              <div id="tide"></div>
+              <script src="tideheight.js"></script>
+            </div>
+          </div>
+          <br>
+          <!-- Water temp graph -->
+          <div class="row">
+            <div class="col-xl-6 col-md-12 mb-8">
+              <div id="temp"></div>
+              <script src="temperature.js"></script>
+            </div>
+            <br>
+            <!-- Water salinity graph -->
+            <div class="col-xl-6 col-md-12 mb-8">
+              <div id="sal"></div>
+              <script src="salinity.js"></script>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="col-xl-12 col-md-12 mb-8">
+              <h1 class="h3 mb-2 text-gray-800" id="about">About</h1>
+              <p class="mb-4" id="subheading3">
+                This page aims to provide both current and forecast marine information, using data collected by the Irish Marine Institute. Sea surface height, sea surface temperature and water salinity are displayed in the graphs above for various locations, although
+                the page hopes to provide more marine data in time. Other information on this page includes the Met Éireann weather widget which provides a current weather summary, in addition to the sunrise and sunset times. Below is an explanation of
+                the marine data:
+              </p>
+              <ul>
+                <li>
+                  Sea Surface Temperature: This will give the temperature of the water surface.
+                </li>
+                <br>
+                <li>
+                  Water Salinity: This measures the saltiness of the water. The higher the water’s salinity level, the clearer the water will be. This is because the salt ions bind with other compounds in the water and drag them down to the seabed.
+                </li>
+                <br>
+                <li>
+                  Sea Surface Height: This is the state of the tide height in metres, with reference to the Lowest Astronomical Tide (LAT). LAT is the lowest predicted tide level under average weather conditions, but does not take other atmospheric influences into account,
+                  such as wind stress and atmospheric pressure. This is why the above tidal data will show minus figures, and why converting the tide height in metres to feet will not give the exact tide level, with reference to the seabed.
+                </li>
+                <br>
+              </ul>
+            </div>
+          </div>
+      </div>
+    </section>
+    <!-- Initialize firebase -->
+    <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase.js"></script>
+    <!-- Firebase App is required and must be first -->
+    <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-app.js"></script>
+    <script src="/__/firebase/init.js"></script>
+  </body>
+</html>
