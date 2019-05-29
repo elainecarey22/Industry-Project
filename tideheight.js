@@ -20,6 +20,9 @@ function drawTable(tideHeight) {
                 data: tideHeight
             }
         },
+        tooltip: {
+            crosshairs: true
+        },
         scrollbar: {
             liveRedraw: false
         },
