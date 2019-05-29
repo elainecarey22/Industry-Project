@@ -1,0 +1,25 @@
+[debug] [2019-05-29T09:20:51.241Z] ----------------------------------------------------------------------
+[debug] [2019-05-29T09:20:51.244Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\ecarey\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2019-05-29T09:20:51.244Z] CLI Version:   6.10.0
+[debug] [2019-05-29T09:20:51.244Z] Platform:      win32
+[debug] [2019-05-29T09:20:51.244Z] Node Version:  v10.16.0
+[debug] [2019-05-29T09:20:51.245Z] Time:          Wed May 29 2019 10:20:51 GMT+0100 (Irish Standard Time)
+[debug] [2019-05-29T09:20:51.245Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-05-29T09:20:51.253Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-05-29T09:20:51.253Z] > authorizing via signed-in user
+[debug] [2019-05-29T09:20:51.253Z] [iam] checking project daily-swimmer for permissions ["firebase.projects.get"]
+[debug] [2019-05-29T09:20:51.255Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/daily-swimmer:testIamPermissions  
+
+[debug] [2019-05-29T09:20:52.025Z] <<< HTTP RESPONSE 200
+[debug] [2019-05-29T09:20:52.027Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/daily-swimmer  
+ 
+[debug] [2019-05-29T09:20:52.774Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\ecarey\Documents\GitHub\Industry-Project'...
+[info] 
+[debug] [2019-05-29T09:20:52.785Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/920093479356/clients/_:getWebAppConfig  
+ 
+[debug] [2019-05-29T09:20:53.153Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] +  hosting: Local server: http://localhost:5000
