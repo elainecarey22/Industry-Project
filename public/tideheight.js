@@ -22,7 +22,7 @@ function drawTable(tideHeight) {
         },
         tooltip: {
             crosshairs: true,
-            valueDecimals: 3
+            valueDecimals: 2
         },
         scrollbar: {
             liveRedraw: false
