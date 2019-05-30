@@ -22,7 +22,8 @@ function salinityGraph(salinity) {
             }
         },
         tooltip: {
-            crosshairs: true
+            crosshairs: true,
+            valueDecimals: 1
         },
         scrollbar: {
             liveRedraw: false
