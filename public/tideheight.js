@@ -21,7 +21,8 @@ function drawTable(tideHeight) {
             }
         },
         tooltip: {
-            crosshairs: true
+            crosshairs: true,
+            valueDecimals: 3
         },
         scrollbar: {
             liveRedraw: false

@@ -22,7 +22,8 @@ function tempGraph(seaTemp) {
             }
         },
         tooltip: {
-            crosshairs: true
+            crosshairs: true,
+            valueDecimals: 1
         },
         scrollbar: {
             liveRedraw: false

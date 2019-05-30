@@ -297,14 +297,17 @@ var current_time = current_hour + ":" + current_minute + ":" + current_second + 
 var dateTime = current_date + 'T' + current_time;
 console.log(dateTime);
 /*
- ** do the same as above for 2 days from now
+ ** do the same as above for 1 day from now
  */
 var todaysDate = new Date();
 todaysDate.setDate(todaysDate.getDate() + 1);
+console.log(todaysDate);
 var this_month = todaysDate.getFullMonth();
 var this_date = todaysDate.getFullDate();
 var this_day = todaysDate.getFullYear() + '-' + this_month + '-' + this_date;
 var dateTimePlusOne = this_day + 'T' + current_time;
+console.log(dateTimePlusOne);
+
 // requests water salinity from server
 function refreshSalinity(long, lat) {
   if (long == undefined) {
@@ -371,7 +374,7 @@ function refreshHeight(stationID) {
   }
   $.ajax({
     type: 'GET',
-    url: 'https://erddap.marine.ie/erddap/tabledap/IMI-TidePrediction_epa.json?time%2Csea_surface_height&time%3E=now&time%3C=now%2B2days&stationID=%22' + stationID + '%22&distinct()',
+    url: 'https://erddap.marine.ie/erddap/tabledap/IMI-TidePrediction_epa.json?time%2Csea_surface_height&time%3E=' + dateTime + '&time%3C=' + dateTimePlusOne + '&stationID=%22' + stationID + '%22&distinct()',
     success: function (data) {
       var currentTide = data.table.rows[0]
       var curT = currentTide[1]
