@@ -1,7 +1,19 @@
+Highcharts.setOptions({
+    time: {
+        /**
+         * Use moment-timezone.js to return the timezone offset for individual
+         * timestamps, used in the X axis labels and the tooltip header.
+         */
+        getTimezoneOffset: function (timestamp) {
+            var zone = 'Europe/Dublin',
+                timezoneOffset = -moment.tz(timestamp, zone).utcOffset();
 
+            return timezoneOffset;
+        }
+    }
+});
 /*
-** get current date & two days from now
-** to display at the top of the graph
+** Dates to display at the top of the graph
 */
 var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 var initial = new Date();

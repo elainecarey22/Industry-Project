@@ -5,7 +5,7 @@ var beaches = {
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "stationID": "IESWBWC230_0000_0300_MODELLED",
+        "stationID": "IEWEBWC170_0000_0200_MODELLED",
         "coordinates": [
           -9.08103515624996,
           53.25048537234853
