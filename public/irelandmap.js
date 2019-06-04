@@ -299,7 +299,7 @@ var dateTime = current_date + 'T' + current_time;
  ** do the same as above for 1 day from now
  */
 var tomorrow = new Date();
-tomorrow.setDate(tomorrow.getDate() + 1);
+tomorrow.setDate(tomorrow.getDate() + 2);
 var this_month = tomorrow.getFullMonth();
 var this_date = tomorrow.getFullDate();
 var this_day = tomorrow.getFullYear() + '-' + this_month + '-' + this_date;
