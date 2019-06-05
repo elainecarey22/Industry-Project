@@ -243,81 +243,15 @@ $('#sidebarCollapse').on('click', function () {
   $('#sidebar').toggleClass('active');
 });
 /*
- ** function to return a 0 before month number
- ** needed for requesting months Jan - Sep
+ ** formatting datetime objects to comply with request string
+ ** startTime takes away 1 hour from the current time
+ ** endTime takes one hour away from current time and adds a day
  */
-Date.prototype.getFullMonth = function () {
-  if (this.getMonth() < 10) {
-    return '0' + (this.getMonth() + 1);
-  }
-  return this.getMonth();
-};
-/*
- ** function to return a 0 before date number
- ** needed for requesting dates 1-9
- */
-Date.prototype.getFullDate = function () {
-  if (this.getDate() < 10) {
-    return '0' + (this.getDate());
-  }
-  return this.getDate();
-};
-// same function for hours 1-9
-Date.prototype.getFullHour = function () {
-  if (this.getHours() < 10) {
-    return '0' + (this.getHours());
-  }
-  return this.getHours();
-};
-// same function for minutes 1-9
-Date.prototype.getFullMinute = function () {
-  if (this.getMinutes() < 10) {
-    return '0' + (this.getMinutes());
-  }
-  return this.getMinutes();
-};
-// same function for seconds 1-9
-Date.prototype.getFullSecond = function () {
-  if (this.getSeconds() < 10) {
-    return '0' + (this.getSeconds());
-  }
-  return this.getSeconds();
-};
-/*
- ** create current datetime object in format needed for AJAX call
- */
-var today = new Date();
-var current_month = today.getFullMonth();
-var current_date = today.getFullDate();
-var current_hour = today.getFullHour();
-var current_minute = today.getFullMinute();
-var current_second = today.getFullSecond();
-var current_date = today.getFullYear() + '-' + current_month + '-' + current_date;
-var current_time = current_hour + ":" + current_minute + ":" + current_second + 'Z';
-var dateTime = current_date + 'T' + current_time;
-/*
- ** do the same as above for 1 day from now
- */
-var tomorrow = new Date();
-tomorrow.setDate(tomorrow.getDate() + 1);
-var this_month = tomorrow.getFullMonth();
-var this_date = tomorrow.getFullDate();
-var this_day = tomorrow.getFullYear() + '-' + this_month + '-' + this_date;
-var dateTimePlusOne = this_day + 'T' + current_time;
-/*
- ** minus 1 hour from the current time
- */
-var oneHourBefore = new Date();
-oneHourBefore.setHours(oneHourBefore.getHours() - 1);
-var m = oneHourBefore.getFullMinute();
-var s = oneHourBefore.getFullSecond();
-var h = oneHourBefore.getFullHour();
-var past = h + ":" + m + ":" + s + 'Z';
-var minusHr = current_date + 'T' + past;
-console.log(minusHr);
-// get tomorrow for one hour behind
-var minusHrPlusOne = this_day + 'T' + past;
-console.log(minusHrPlusOne);
+var startTime = JSON.stringify(new Date(new Date().getTime() - (60*60*1000))).substring(1,24);
+var add = new Date();
+var endTime = JSON.stringify(new Date(add.getTime() -(60*60*1000) +(24*60*60*1000))).substring(1, 24);
+console.log(startTime);
+console.log(endTime);
 
 // requests water salinity from server
 function refreshSalinity(long, lat) {
@@ -329,7 +263,7 @@ function refreshSalinity(long, lat) {
   }
   $.ajax({
     type: 'GET',
-    url: 'https://erddap.marine.ie/erddap/griddap/IMI_CONN_3D.json?Sea_water_salinity[(' + minusHr + '):1:(' + minusHrPlusOne + ')][(20.0):1:(20.0)][(' + lat + '):1:(' + lat + ')][(' + long + '):1:(' + long + ')]',
+    url: 'https://erddap.marine.ie/erddap/griddap/IMI_CONN_3D.json?Sea_water_salinity[(' + startTime + '):1:(' + endTime + ')][(20.0):1:(20.0)][(' + lat + '):1:(' + lat + ')][(' + long + '):1:(' + long + ')]',
     success: (data) => {
       var response = data.table
       var salinity = [];
@@ -355,7 +289,7 @@ function refreshTemp(long, lat) {
   }
   $.ajax({
     type: 'GET',
-    url: 'https://erddap.marine.ie/erddap/griddap/IMI_CONN_3D.json?Sea_water_temperature[(' + minusHr + '):1:(' + minusHrPlusOne + ')][(20.0):1:(20.0)][(' + lat + '):1:(' + lat + ')][(' + long + '):1:(' + long + ')]',
+    url: 'https://erddap.marine.ie/erddap/griddap/IMI_CONN_3D.json?Sea_water_temperature[(' + startTime + '):1:(' + endTime + ')][(20.0):1:(20.0)][(' + lat + '):1:(' + lat + ')][(' + long + '):1:(' + long + ')]',
     success: function (data) {
       var currentTemp = data.table.rows[0]
       var curTemp = currentTemp[4]
