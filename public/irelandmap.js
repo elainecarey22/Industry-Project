@@ -2,6 +2,9 @@
  ** A Mapbox tutorial provided the basis for the following map code
  */
 // Wait until DOM content has loaded before initialising map
+window.onload = function () {
+	document.getElementById('map').scrollIntoView();
+};
 document.addEventListener('DOMContentLoaded', function () {
   // create MAP using access token and variable 'map'
   mapboxgl.accessToken = 'pk.eyJ1IjoiZWNhcmV5MjIiLCJhIjoiY2pzM2E3OG5qMjVrazN5bjF4M28xOWZzMiJ9.aDn2wTTUA-BvzMKGmAAcZg';
@@ -141,11 +144,11 @@ document.addEventListener('DOMContentLoaded', function () {
           })
             .setLngLat(currentFeature.geometry.coordinates)
             // add info from geojson file to the popup and add link to scroll down the page
-            .setHTML('<h4>' + currentFeature.properties.city + ', ' + currentFeature.properties.county +
+            .setHTML('<h4>' + currentFeature.properties.city +
               '</h4>' + '<h5><a href="#forecast">' + 'Get Forecast' + '</a></h5>')
             .addTo(map);
           // add info from geojson file to the popup
-          document.getElementById("currentLocation").innerHTML = currentFeature.properties.city + ', ' + currentFeature.properties.county
+          document.getElementById("currentLocation").innerHTML = currentFeature.properties.city
         }
       }
     }); // end unclustered-point onclick event
@@ -197,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
           activeItem[0].classList.remove('active');
         }
         this.parentNode.classList.add('active');
-        document.getElementById('currentLocation').innerHTML = clickedListing.properties.city + ', ' + clickedListing.properties.county
+        document.getElementById('currentLocation').innerHTML = clickedListing.properties.city
       });
       // variables to define the current markers long, lat and stationID
       // passed into functions which make the ajax requests
@@ -226,11 +229,11 @@ document.addEventListener('DOMContentLoaded', function () {
         })
           .setLngLat(currentFeature.geometry.coordinates)
           // add info from geojson file to the popup and add link to scroll down the page
-          .setHTML('<h4>' + currentFeature.properties.city + ', ' + currentFeature.properties.county +
+          .setHTML('<h4>' + currentFeature.properties.city +
             '</h4>' + '<h5><a href="#forecast">' + 'Get Forecast' + '</a></h5>')
           .addTo(map);
         // add info from geojson file to the popup
-        document.getElementById("currentLocation").innerHTML = currentFeature.properties.city + ', ' + currentFeature.properties.county
+        document.getElementById("currentLocation").innerHTML = currentFeature.properties.city
       }
     }
   } // end buildSidebar() 
