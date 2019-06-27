@@ -12,9 +12,57 @@ var beaches = {
         ]
       },
       "properties": {
-        "city": "Salthill",
+        "city": "Salthill Beach",
         "country": "Ireland",
-        "county": "Galway"
+        "county": "Salthill"
+      }
+    },
+{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "stationID" : "IEWEBWC170_0000_0100_MODELLED",
+        "coordinates": [
+		-9.12568359374996,
+        53.24871264512585		
+        ]
+      },
+      "properties": {
+        "city": "Silverstrand Beach",
+        "country": "Ireland",
+        "county": "Barna"
+      }
+    },
+{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "stationID" : "IEWEBWC100_0000_0100_MODELLED",
+        "coordinates": [
+		-9.22391015624996,
+        53.24693991790317		
+        ]
+      },
+      "properties": {
+        "city": "Furbogh Beach",
+        "country": "Ireland",
+        "county": "Furbogh"
+      }
+    },
+{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "stationID" : "IEWEBWC010_0000_0400_MODELLED",
+        "coordinates": [
+		-9.30130078124996,
+        53.241621736235125		
+        ]
+      },
+      "properties": {
+        "city": "Spiddal Beach",
+        "country": "Ireland",
+        "county": "Spiddal"
       }
     },
     {
@@ -28,9 +76,9 @@ var beaches = {
         ]
       },
       "properties": {
-        "city": "Kinvara",
+        "city": "Traught Beach",
         "country": "Ireland",
-        "county": "Galway"
+        "county": "Kinvara"
       }
     },
     {
@@ -44,9 +92,9 @@ var beaches = {
         ]
       },
       "properties": {
-        "city": "Inis Mór",
+        "city": "Kilmurvey Beach",
         "country": "Ireland",
-        "county": "Galway"
+        "county": "Inis Mór"
       }
     },
     {
@@ -60,11 +108,90 @@ var beaches = {
         ]
       },
       "properties": {
-        "city": "Ballyloughane",
+        "city": "Ballyloughane Beach",
         "country": "Ireland",
-        "county": "Galway"
+        "county": "Renmore"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "stationID" : "BPNBF120000140001_MODELLED",
+        "coordinates": [
+		-9.97102734374996,
+        53.37989445960417		
+        ]
+      },
+      "properties": {
+        "city": "Dog's Bay",
+        "country": "Ireland",
+        "county": "Roundstone"
+      }
+    },
+{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "stationID" : "BPNBF120000210001_MODELLED",
+        "coordinates": [
+		-9.88173046874996,
+        53.617439907443284		
+        ]
+      },
+      "properties": {
+        "city": "Glassilaun Beach",
+        "country": "Ireland",
+        "county": "Glassilaun"
+      }
+    },
+{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "stationID" : "IEWEBWC230_0000_0100_MODELLED",
+        "coordinates": [
+		-9.95019140624996,
+        53.37634900515881		
+        ]
+      },
+      "properties": {
+        "city": "Gurteen Bay",
+        "country": "Ireland",
+        "county": "Roundstone"
+      }
+    },
+{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "stationID" : "BPNBF120000230001_MODELLED",
+        "coordinates": [
+		-10.14664453124996,
+        53.53234900075465		
+        ]
+      },
+      "properties": {
+        "city": "Omey Island Strand",
+        "country": "Ireland",
+        "county": "Omey Island"
+      }
+    },
+{
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "stationID" : "IEWEBWC200_0000_0100_MODELLED",
+        "coordinates": [
+		-9.63169921874996,
+        53.24871264512585		
+        ]
+      },
+      "properties": {
+        "city": "Coral Strand",
+        "country": "Ireland",
+        "county": "Carraroe"
       }
     }
-
   ]
 };
