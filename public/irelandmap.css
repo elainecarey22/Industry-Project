@@ -1,7 +1,8 @@
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 body {
-    font: 'Offc Pro Medium', 'Arial Unicode MS Regular';
-    background: #fafafa;
+	font: 'Offc Pro Medium', 'Arial Unicode MS Regular';
+	background: #fafafa;
+	-webkit-font-smoothing: antialiased;
 }
 p {
     font: 'Offc Pro Medium, Arial Unicode MS Regular';
@@ -47,18 +48,19 @@ a:focus {
     SIDEBAR STYLE
 ----------------------------------------------------- */
 .wrapper {
-    display: flex;
-    width: 100%;
-    align-items: stretch;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
 }
 #sidebar {
-    min-width: 250px;
+	min-width: 250px;
     max-width: 250px;
+	width: 25%;
     background: #fff;
     color: #818182;
     transition: all 0.3s;
     z-index: 1;
-    height: 100%;
+    height: 40%;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 #sidebar.active {
@@ -131,6 +133,7 @@ a.article:hover {
 ----------------------------------------------------- */
 html {
   scroll-behavior: smooth;
+  height: 100%;
 }
 #content {
     width: 100%;
@@ -234,30 +237,28 @@ html {
   }
 }
 body {
-  height: 1400px;
+  height: 100%;
 }
 #heading0, #heading1, #heading2, #about, #subheading1, #subheading2, #subheading3, #subheading4 {
   text-align: center;
 }
 #map {
-  position: absolute;
-  font: 'Offc Pro Medium', 'Arial Unicode MS Regular';
-  width: 100%;
-  height: 100%;
-  top: 0;
-  bottom: 0;
+	position: absolute;
+	font: 'Offc Pro Medium', 'Arial Unicode MS Regular';
+	width: 100%;
+	height: 100%;
+	top: 0;
+	bottom: 0;
 }
 .listings {
-  height: 100%;
-  overflow: auto;
-  padding-bottom: 60px;
+	height: 100%;
 }
-.listings .item {
-  display: block;
-  border-bottom: 1px solid #eee;
-  padding: 10px;
-  text-decoration: none;
-}
+	.listings .item {
+		display: block;
+		border-bottom: 1px solid #eee;
+		padding: 10px;
+		text-decoration: none;
+	}
 .listings .item:last-child {
   border-bottom: none;
 }
@@ -363,4 +364,11 @@ body {
 .mapboxgl-ctrl-geocoder > div {
   min-width: 100%;
   margin-left: 20%;
+}
+* {
+	box-sizing: border-box;
+}
+#listings.listings {
+	height: 415px;
+	overflow-y: scroll;
 }
