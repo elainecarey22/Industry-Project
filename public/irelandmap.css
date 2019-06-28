@@ -156,7 +156,7 @@ html {
     }
 }/* Style the navigation bar */
 .navbar {
-  background-color: #fff;
+  background: #fff;
   overflow: hidden;
 }
 /* Navbar links */
@@ -188,10 +188,6 @@ html {
   font-family: inherit; /* Important for vertical align on mobile phones */
   margin: 0; /* Important for vertical align on mobile phones */
 }
-/* Add a background color to navbar links on hover */
-.navbar a:hover, .dropdown:hover .dropbtn {
-  background-color: red;
-}
 /* Dropdown content (hidden by default) */
 .dropdown-content {
   display: none;
@@ -218,10 +214,6 @@ html {
 .dropdown:hover .dropdown-content {
   display: block;
 }
-/* Navbar links on mouse-over */
-.navbar a:hover {
-  background-color: #fff;
-}
 .navbar-logo {
   width: 20px;
 }
@@ -238,6 +230,9 @@ html {
 }
 body {
   height: 100%;
+}
+img {
+	width: 220px;
 }
 #heading0, #heading1, #heading2, #about, #subheading1, #subheading2, #subheading3, #subheading4 {
   text-align: center;
@@ -371,4 +366,7 @@ body {
 #listings.listings {
 	height: 415px;
 	overflow-y: scroll;
+}
+.navbar-brand {
+	width: 70%;
 }

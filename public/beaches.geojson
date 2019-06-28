@@ -24,7 +24,7 @@ var beaches = {
         "stationID" : "IEWEBWC170_0000_0100_MODELLED",
         "coordinates": [
 		-9.12568359374996,
-        53.24871264512585		
+        53.24871264512585
         ]
       },
       "properties": {
@@ -40,13 +40,13 @@ var beaches = {
         "stationID" : "IEWEBWC100_0000_0100_MODELLED",
         "coordinates": [
 		-9.22391015624996,
-        53.24693991790317		
+        53.24693991790317
         ]
       },
       "properties": {
-        "city": "Furbogh Beach",
+        "city": "Furbo Beach",
         "country": "Ireland",
-        "county": "Furbogh"
+        "county": "Furbo"
       }
     },
 {
@@ -56,7 +56,7 @@ var beaches = {
         "stationID" : "IEWEBWC010_0000_0400_MODELLED",
         "coordinates": [
 		-9.30130078124996,
-        53.241621736235125		
+        53.241621736235125
         ]
       },
       "properties": {
@@ -120,7 +120,7 @@ var beaches = {
         "stationID" : "BPNBF120000140001_MODELLED",
         "coordinates": [
 		-9.97102734374996,
-        53.37989445960417		
+        53.37989445960417
         ]
       },
       "properties": {
@@ -136,7 +136,7 @@ var beaches = {
         "stationID" : "BPNBF120000210001_MODELLED",
         "coordinates": [
 		-9.88173046874996,
-        53.617439907443284		
+        53.617439907443284
         ]
       },
       "properties": {
@@ -152,7 +152,7 @@ var beaches = {
         "stationID" : "IEWEBWC230_0000_0100_MODELLED",
         "coordinates": [
 		-9.95019140624996,
-        53.37634900515881		
+        53.37634900515881
         ]
       },
       "properties": {
@@ -168,7 +168,7 @@ var beaches = {
         "stationID" : "BPNBF120000230001_MODELLED",
         "coordinates": [
 		-10.14664453124996,
-        53.53234900075465		
+        53.53234900075465
         ]
       },
       "properties": {
@@ -184,7 +184,7 @@ var beaches = {
         "stationID" : "IEWEBWC200_0000_0100_MODELLED",
         "coordinates": [
 		-9.63169921874996,
-        53.24871264512585		
+        53.24871264512585
         ]
       },
       "properties": {
