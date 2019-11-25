@@ -1,5 +1,5 @@
 # Industry-Project
-Marine forecast dashboard
+"Daily Swimmer": A marine forecast dashboard
 
 A visual representation of current and forecast data for tide heights, water temperature and water salinity.
 
